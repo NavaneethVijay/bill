@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node-dev index.js"
+    "dev": "node-dev index.js",
+    "start": "node index.js"
   },
   "author": "Navaneethvijay",
   "license": "ISC",
