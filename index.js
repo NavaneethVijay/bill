@@ -3,9 +3,11 @@ import bodyParser from "body-parser";
 import { productsRouter } from "./routes/products/index.js";
 import { cartRouter } from "./routes/cart/index.js";
 import { customerRouter } from "./routes/customer/index.js";
+import cors from 'cors';
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors())
 
 // Mounting Products Router
 app.use("/products", productsRouter);
