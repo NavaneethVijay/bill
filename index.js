@@ -14,7 +14,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/customer", customerRouter);
 
-const port = 3000;
+const port = 9000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
