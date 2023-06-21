@@ -8,7 +8,6 @@ export default class ProductService {
       .eq("sku", sku)
       .single();
     if (error) {
-      console.log(error);
       return false;
     }
     return data;
@@ -21,7 +20,6 @@ export default class ProductService {
       .eq("sku", sku);
 
     if (error) {
-      console.log(error);
       return false;
     }
     return data;

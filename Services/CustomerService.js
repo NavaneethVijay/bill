@@ -68,7 +68,6 @@ export default class CustomerService {
       .eq("customer_id", customerId)
       .eq("is_active", true);
     if (error) {
-      console.log(error);
       throw new Error("Error fetching cart!");
     }
 
