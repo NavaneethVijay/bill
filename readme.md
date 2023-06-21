@@ -2,6 +2,8 @@
 This application is build using **express.js** as backend and consists for **REST APIs** to manage cart and discounts during checkout. It uses Supabase as database provider.
 The product prices depends on the Qty at which is being purchased. Customers will get special prices on the products based on the qty.
 
+Node version: **v14.21.3**
+
 ## Installation for local usage
 
 **Install packages and start express server**
