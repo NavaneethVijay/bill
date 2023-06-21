@@ -8,7 +8,12 @@ export async function searchCustomer({email}) {
     body: JSON.stringify({
       email,
     }),
-  }).then((res) => res.json());
+  }).then((res) => {
+    if(res.status === 500){
+      throw new Error("Customer does not exist !")
+    }
+    return res.json()
+  });
 }
 
 export async function createCustomer(event) {
@@ -32,19 +37,8 @@ export async function createCustomer(event) {
 }
 
 export async function fetchCustomerCart(customer) {
-  console.log("fetching customer cart");
-  console.log(customer);
   if (customer) {
-    return fetch(`${process.env.REACT_APP_API_BASE_URL}/cart`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        cart_id: customer.cart.cartId,
-      }),
-    }).then((res) => res.json());
+    return fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/get/${customer.cart.cartId}`).then((res) => res.json());
   }
 }
 
@@ -60,9 +54,13 @@ export async function addProductToCart({ cart_id, sku, qty }) {
       sku,
       qty,
     }),
-  }).then((res) => res.json());
+  }).then((res) => {
+    if(res.status === 500 ){
+      throw new Error("Error while adding product to cart !")
+    }
+    return res.json()
+  });
 }
-
 
 export async function removeItemFromCart({cart_id, cart_item_id}){
   return fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/remove`, {
@@ -79,16 +77,14 @@ export async function removeItemFromCart({cart_id, cart_item_id}){
 }
 
 export async function generateInvoice(customer) {
-  if (customer) {
-    return fetch(`${process.env.REACT_APP_API_BASE_URL}/customer/invoice`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: customer.email,
-      }),
-    }).then((res) => res.json());
-  }
+  return fetch(`${process.env.REACT_APP_API_BASE_URL}/customer/invoice`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: customer.email,
+    }),
+  }).then((res) => res.json());
 }

@@ -1,7 +1,49 @@
-function SearchCustomer({ handleSearch }) {
+import { useState } from "react";
+import { searchCustomer, fetchCustomerCart } from "../api/index.js";
+import { setCartData, setCustomerData, setIsLoading } from "../store/action";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => ({
+  customer: state.billingReducer.customer,
+});
+const mapDispatchToProps = (dispatch) => ({
+  setCustomerData: (customer) => dispatch(setCustomerData(customer)),
+  setCartData: (cart) => dispatch(setCartData(cart)),
+  setIsLoading: (status) => dispatch(setIsLoading(status)),
+});
+
+function SearchCustomer({
+  setCustomerData,
+  setCartData,
+  customer,
+  setIsLoading,
+}) {
+  const [errorMessage, setErrorMessage] = useState("");
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const email = event.target.search.value;
+    setIsLoading(true);
+    searchCustomer({ email })
+      .then(async (res) => {
+        const { data } = res;
+        if (data) {
+          setCustomerData(data);
+          const { data: cart } = await fetchCustomerCart(data);
+          setCartData(cart);
+        }
+      })
+      .catch((error) => {
+        setErrorMessage("Customer not available, Please create an account !");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
   return (
     <div>
-      <form onSubmit={handleSearch}>
+      <form onSubmit={handleSubmit}>
         <input
           type="email"
           name="search"
@@ -16,9 +58,14 @@ function SearchCustomer({ handleSearch }) {
         >
           Search for Customer
         </button>
+        {errorMessage ? (
+          <div className="bg-amber-50 p-2 mt-4 border-l-4 border-amber-500 text-amber-800 ">
+            {errorMessage}
+          </div>
+        ) : null}
       </form>
     </div>
   );
 }
 
-export default SearchCustomer;
+export default connect(mapStateToProps, mapDispatchToProps)(SearchCustomer);

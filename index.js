@@ -1,18 +1,18 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { productsRouter } from "./routes/products/index.js";
-import { cartRouter } from "./routes/cart/index.js";
-import { customerRouter } from "./routes/customer/index.js";
+import { productsRouter } from "./Routes/products/index.js";
+import { cartRouter } from "./Routes/cart/index.js";
+import { customerRouter } from "./Routes/customer/index.js";
 import cors from 'cors';
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors())
 
-// Mounting Products Router
-app.use("/products", productsRouter);
-app.use("/cart", cartRouter);
-app.use("/customer", customerRouter);
+// Mounting Routes
+app.use("/api/products", productsRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/customer", customerRouter);
 
 const port = 3000;
 app.listen(port, () => {

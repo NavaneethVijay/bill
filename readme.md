@@ -26,7 +26,7 @@ Tables used
 
 #### Create new Customer
 
-**Endpoint:** `{{base_url}}/customer/create`
+**Endpoint:** `{{base_url}}/api/customer/create`
 **Method:** POST
 
 Request Parameters
@@ -40,7 +40,7 @@ Request Parameters
     {
 	    "email": "sainavaneeth@gmail.com",
 	    "mobile": 9886002202,
-	    "name": "vijay"
+	    "name": "Navaneeth"
     }
 
 **Response Data**
@@ -68,7 +68,7 @@ Response consists of basic customer info, cart info which contains the products 
 ----
 #### Get Customer info
 
-**Endpoint:** `{{base_url}}/customer`
+**Endpoint:** `{{base_url}}/api/customer`
 **Method:** POST
 
 Request Parameters
@@ -126,7 +126,7 @@ Response consists of basic customer info, cart info which contains the products 
 ### 2. Cart Management
 ####  - Get Customer Cart
 
-**Endpoint:** `{{base_url}}/cart`
+**Endpoint:** `{{base_url}}/api/cart`
 **Method:** POST
 
 Request Parameters
@@ -179,7 +179,7 @@ Response consists of cart info with calculated totals.
 
 ####  - Add Product to cart
 
-**Endpoint:** `{{base_url}}/cart/add`
+**Endpoint:** `{{base_url}}/api/cart/add`
 **Method:** POST
 
 Request Parameters
@@ -236,7 +236,7 @@ Adding the product to cart returns the updated cart as response, which is simila
 
 ####  - Remove Product from cart
 
-**Endpoint:** `{{base_url}}/cart/remove`
+**Endpoint:** `{{base_url}}/api/cart/remove`
 **Method:** POST
 
 Request Parameters
@@ -282,7 +282,7 @@ Adding the product to cart returns the updated cart as response, which is simila
 
 ####  - Create Purchase
 
-**Endpoint:** `{{base_url}}/customer/invoice`
+**Endpoint:** `{{base_url}}/api/customer/invoice`
 **Method:** POST
 
 Request Parameters
@@ -327,12 +327,12 @@ Response contains the invoice number and order details
 **Get products**
 Returns all available products in the inventory
 
-**Endpoint:** `{{base_url}}/products`
+**Endpoint:** `{{base_url}}/api/products`
 **Method:** GET
 
 ---
 **Get Discounts**
 Returns all available discounts for the products
 
-**Endpoint:** `{{base_url}}/products/discounts`
+**Endpoint:** `{{base_url}}/api/products/discounts`
 **Method:** GET

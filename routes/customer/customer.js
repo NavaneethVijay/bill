@@ -1,12 +1,8 @@
 import { Router } from "express";
+import { getFormattedCartInfo } from "../../lib/cartHelper.js";
+import CustomerService from "../../Services/CustomerService.js";
+
 const customerRoute = new Router();
-import supabase from "../../db/supabase.js";
-import { createCartForCustomer, getFormattedCartInfo } from "../../lib/cartHelper.js";
-import {
-  getCustomer,
-  getCustomerCart,
-  generateInvoiceForCustomer,
-} from "../../lib/customerHelper.js";
 
 /**
  * Create new customer
@@ -20,18 +16,19 @@ customerRoute.post("/create", async (req, res) => {
   }
 
   try {
-    const { data, error } = await supabase
-      .from("customer")
-      .upsert({ email, name, mobile }, { onConflict: "email" })
-      .select()
-      .single();
-
-    if (error) {
+    const customerService = new CustomerService();
+    const customer = await customerService.createCustomer({
+      email,
+      name,
+      mobile,
+    });
+    if (!customer) {
       res.status(500);
-      return res.json({ data: null, message: "Error creating account" });
+      return res.json({
+        message: "Something went wrong while creating customer",
+      });
     }
-
-    const cartData = await createCartForCustomer(data.id);
+    const cartData = await customerService.createCart(customer.id);
 
     const cartInfo = {
       cartId: cartData.id,
@@ -43,7 +40,7 @@ customerRoute.post("/create", async (req, res) => {
     };
 
     return res.json({
-      data: { ...data, cart: cartInfo },
+      data: { ...customer, cart: cartInfo },
       message: "Successfully created account",
     });
   } catch (error) {
@@ -64,21 +61,22 @@ customerRoute.post("/", async (req, res) => {
   }
 
   try {
-    const customerData = await getCustomer({ email });
+    const customerService = new CustomerService();
+    const customer = await customerService.getCustomer({ email });
 
-    const { id: customerId } = customerData;
+    const { id: customerId } = customer;
 
-    const cartData = await getCustomerCart({ customerId });
+    const cartData = await customerService.getCart({ customerId });
     let cartInfo = getFormattedCartInfo(cartData);
 
     // Create new cart if it is not available
     if (!cartData) {
-      const cart = await createCartForCustomer(customerId);
-       cartInfo = getFormattedCartInfo(cart);
+      const cart = await customerService.createCart(customerId);
+      cartInfo = getFormattedCartInfo(cart);
 
       return res.json({
         data: {
-          ...customerData,
+          ...customer,
           cart: cartInfo,
         },
       });
@@ -86,7 +84,7 @@ customerRoute.post("/", async (req, res) => {
 
     return res.json({
       data: {
-        ...customerData,
+        ...customer,
         cart: cartInfo,
       },
     });
@@ -105,9 +103,10 @@ customerRoute.post("/invoice", async (req, res) => {
   }
 
   try {
-    // Create new invoice entry for customer
-    // Mark current cart as in active
-    const response = await generateInvoiceForCustomer({ email });
+    const customerService = new CustomerService();
+    const response = await customerService.generateInvoiceForCustomer({
+      email,
+    });
     res.json(response);
   } catch (error) {
     res.status(500);

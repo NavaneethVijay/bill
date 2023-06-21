@@ -1,4 +1,27 @@
-function CreateCustomer({handleCustomerCreate}) {
+import { createCustomer, fetchCustomerCart } from "../api/index";
+import { setCustomerData, setCartData, setIsLoading } from "../store/action";
+
+import { connect } from "react-redux";
+
+const mapDispatchToProps = (dispatch) => ({
+  setCartData: (cart) => dispatch(setCartData(cart)),
+  setCustomerData: (customer) => dispatch(setCustomerData(customer)),
+  setIsLoading: (status) => dispatch(setIsLoading(status)),
+});
+
+function CreateCustomer({ setCustomerData, setCartData, setIsLoading }) {
+  async function handleCustomerCreate(event) {
+    event.preventDefault();
+    setIsLoading(true);
+    const { data } = await createCustomer(event);
+    if (data) {
+      setCustomerData(data);
+      const { data: cart } = await fetchCustomerCart(data);
+      setCartData(cart);
+    }
+    setIsLoading(false);
+  }
+
   return (
     <form onSubmit={handleCustomerCreate} className="mt-10 sm:w-1/4 ">
       <h3 className="text-lg font-medium">Create Account</h3>
@@ -35,4 +58,4 @@ function CreateCustomer({handleCustomerCreate}) {
     </form>
   );
 }
-export default CreateCustomer
+export default connect(null, mapDispatchToProps)(CreateCustomer);
